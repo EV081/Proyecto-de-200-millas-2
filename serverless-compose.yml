@@ -1,9 +1,11 @@
+org: 200millas  
+
 services:
-  200millas-employees:
+  service-employees:
     path: services/employees
 
-  200millas-users:
+  service-users:
     path: services/users
 
-  200millas-products:
+  service-products:
     path: services/products
