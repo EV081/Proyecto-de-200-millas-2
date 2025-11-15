@@ -17,9 +17,6 @@ def lambda_handler(event, context):
         if not (tenant_id and user_id and password):
             return response(400, {"error": "tenant_id, user_id y password son requeridos"})
 
-        if role not in ALLOWED_ROLES:
-            return response(400, {"error": "role inválido (usa: admin | customer)"})
-
         t_employee.put_item(
             Item={
                 "tenant_id": tenant_id,
