@@ -50,7 +50,7 @@ check_env() {
   : "${TABLE_PEDIDOS:?Falta TABLE_PEDIDOS en .env}"
   : "${TABLE_HISTORIAL_ESTADOS:?Falta TABLE_HISTORIAL_ESTADOS en .env}"
 
-  : "${IMAGES_BUCKET:?Falta IMAGES_BUCKET en .env}"
+  : "${S3_BUCKET_NAME:?Falta S3_BUCKET_NAME en .env}"
 
   export AWS_REGION="${AWS_REGION:-us-east-1}"
 }
@@ -83,9 +83,9 @@ prepare_dependencies() {
 }
 
 ensure_images_bucket() {
-  local bucket="${IMAGES_BUCKET}"
+  local bucket="${S3_BUCKET_NAME}"
   local region="${AWS_REGION:-us-east-1}"
-  [[ -z "$bucket" ]] && die "IMAGES_BUCKET no definido."
+  [[ -z "$bucket" ]] && die "S3_BUCKET_NAME no definido."
 
   if aws s3api head-bucket --bucket "${bucket}" 2>/dev/null; then
     echo -e "${GREEN}✅ Bucket de imágenes '${bucket}' disponible${NC}"
