@@ -15,3 +15,8 @@ services:
     path: products
     dependsOn:
       - dependencias
+  
+  service-pedidos:
+    path: pedidos
+    dependsOn:
+      - dependencias
