@@ -195,10 +195,10 @@ remove_infrastructure() {
   # Espera corta opcional (algunas regiones tardan en soltar recursos)
   sleep 3
 
-  if [[ -n "${IMAGES_BUCKET:-}" ]]; then
+  if [[ -n "${S3_BUCKET_NAME:-}" ]]; then
     echo -e "${YELLOW}Eliminando bucket de imágenes...${NC}"
-    aws s3 rm "s3://${IMAGES_BUCKET}" --recursive 2>/dev/null || echo "Bucket ${IMAGES_BUCKET} vacío/no existe"
-    aws s3 rb "s3://${IMAGES_BUCKET}" 2>/dev/null || echo "Bucket ${IMAGES_BUCKET} no existe"
+    aws s3 rm "s3://${S3_BUCKET_NAME}" --recursive 2>/dev/null || echo "Bucket ${S3_BUCKET_NAME} vacío/no existe"
+    aws s3 rb "s3://${S3_BUCKET_NAME}" 2>/dev/null || echo "Bucket ${S3_BUCKET_NAME} no existe"
   fi
 
   echo -e "${GREEN}✅ Infraestructura eliminada${NC}"
