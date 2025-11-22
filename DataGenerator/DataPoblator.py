@@ -27,7 +27,7 @@ TABLE_LOCALES = os.getenv('TABLE_LOCALES')
 TABLE_PRODUCTOS = os.getenv('TABLE_PRODUCTOS')
 TABLE_PEDIDOS = os.getenv('TABLE_PEDIDOS')
 TABLE_HISTORIAL_ESTADOS = os.getenv('TABLE_HISTORIAL_ESTADOS')
-
+TABLE_TOKENS = os.getenv('TABLE_TOKENS')
 # Nombre del bucket
 S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME')
 
@@ -65,6 +65,11 @@ TABLE_MAPPING = {
         "table_name": TABLE_HISTORIAL_ESTADOS,
         "pk": "pedido_id",     # PK según schema Historial_Estados
         "sk": "estado_id"      # SK según schema Historial_Estados     
+    },
+    "tokens.json": {
+        "table_name": TABLE_TOKENS,
+        "pk": "token",        # PK según schema Tokens
+        "sk": None
     }
 }
 
@@ -501,6 +506,17 @@ def create_all_resources():
         attribute_definitions=[
             {'AttributeName': 'pedido_id', 'AttributeType': 'S'},
             {'AttributeName': 'estado_id', 'AttributeType': 'S'}
+        ]
+    ):
+        return False
+    # Tokens: PK = token
+    if not create_dynamodb_table(
+        table_name=TABLE_TOKENS,
+        key_schema=[
+            {'AttributeName': 'token', 'KeyType': 'HASH'}
+        ],
+        attribute_definitions=[
+            {'AttributeName': 'token', 'AttributeType': 'S'}
         ]
     ):
         return False
