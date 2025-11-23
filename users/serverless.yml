@@ -11,6 +11,7 @@ provider:
   environment:
     USERS_TABLE: ${env:TABLE_USUARIOS}
     TOKENS_TABLE_USERS: ${env:TABLE_TOKENS_USUARIOS}
+    TOKEN_VALIDATOR_FUNCTION: service-users-dev-ValidarUserTokenAcceso
   httpApi:
     cors: true
 
@@ -86,3 +87,8 @@ functions:
       - httpApi:
           method: POST
           path: /users/employees/list
+          
+
+  # lambda authorizer (no expuesto vía HTTP)
+  ValidarUserTokenAcceso:
+    handler: validar_token_users.lambda_handler
