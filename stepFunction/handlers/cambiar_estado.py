@@ -5,7 +5,7 @@ from boto3.dynamodb.conditions import Key
 
 dynamodb = boto3.resource('dynamodb')
 stepfunctions = boto3.client('stepfunctions')
-TABLE_HISTORIAL = os.environ['TABLE_HISTORIAL']
+TABLE_HISTORIAL_ESTADOS = os.environ['TABLE_HISTORIAL_ESTADOS']
 
 def handler(event, context):
     print(f"CambiarEstado Event: {json.dumps(event)}")
@@ -22,7 +22,7 @@ def handler(event, context):
     # We need to find the LATEST token for this order.
     # The table has (id_pedido, createdAt).
     
-    table = dynamodb.Table(TABLE_HISTORIAL)
+    table = dynamodb.Table(TABLE_HISTORIAL_ESTADOS)
     
     # Query all history for this order
     response = table.query(
@@ -38,18 +38,17 @@ def handler(event, context):
     
     latest_item = items[0]
     task_token = latest_item.get('taskToken')
-    current_status = latest_item.get('status')
+    current_estado = latest_item.get('estado')
     
     if not task_token:
-        print(f"No task token found in latest state ({current_status}) for order {order_id}")
+        print(f"No task token found in latest state ({current_estado}) for order {order_id}")
         return
     
-    print(f"Found token for order {order_id} in status {current_status}. Triggering SF...")
+    print(f"Found token for order {order_id} in estado {current_estado}. Triggering SF...")
     
     # Retrieve stored input/details to preserve context (like retry_count)
-    # stored_data can be in 'history' (ProcesarPedido) or 'details' (others)
-    stored_data = latest_item.get('history') or latest_item.get('details') or {}
-    retry_count = stored_data.get('retry_count', 0)
+    stored_data = latest_item.get('details') or {}
+    retry_count = stored_data.get('retry_count', 0) if isinstance(stored_data, dict) else 0
     
     # Determine output status based on event
     output_payload = {
@@ -57,6 +56,7 @@ def handler(event, context):
         "event": detail_type,
         "status": detail.get('status', 'ACEPTADO'), # Default to Accepted if not specified
         "retry_count": retry_count, # Persist retry count
+        "empleado_id": detail.get('empleado_id', 'UNKNOWN'),
         "details": detail
     }
     

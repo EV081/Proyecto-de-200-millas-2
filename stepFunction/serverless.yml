@@ -10,7 +10,7 @@ provider:
     role: arn:aws:iam::${env:AWS_ACCOUNT_ID}:role/LabRole
   environment:
     STATE_MACHINE_ARN: arn:aws:states:us-east-1:368499777044:stateMachine:Millas
-    TABLE_HISTORIAL: t_historial_pedidos
+    TABLE_HISTORIAL_ESTADOS: t_historial_estados
     TABLE_PRODUCTOS: ${env:TABLE_PRODUCTOS}
     QUEUE_COCINA_URL: !Ref ColaCocina
     QUEUE_DELIVERY_URL: !Ref ColaDelivery
@@ -83,10 +83,10 @@ functions:
 resources:
   Resources:
     # DynamoDB Tables
-    HistorialPedidosTable:
+    HistorialEstadosTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: t_historial_pedidos
+        TableName: t_historial_estados
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: id_pedido
@@ -98,18 +98,6 @@ resources:
             KeyType: HASH
           - AttributeName: createdAt
             KeyType: RANGE
-
-    ProductosTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: t_productos
-        BillingMode: PAY_PER_REQUEST
-        AttributeDefinitions:
-          - AttributeName: id_producto
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id_producto
-            KeyType: HASH
 
     # SQS Queues
     ColaCocina:

@@ -6,7 +6,7 @@ from datetime import datetime
 
 dynamodb = boto3.resource('dynamodb')
 sqs = boto3.client('sqs')
-TABLE_HISTORIAL = os.environ['TABLE_HISTORIAL']
+TABLE_HISTORIAL_ESTADOS = os.environ['TABLE_HISTORIAL_ESTADOS']
 QUEUE_COCINA_URL = os.environ['QUEUE_COCINA_URL']
 
 def handler(event, context):
@@ -16,6 +16,7 @@ def handler(event, context):
     task_token = event.get('taskToken')
     input_data = event.get('input', {})
     order_id = input_data.get('detail', {}).get('order_id') or input_data.get('order_id') or str(uuid.uuid4())
+    empleado_id = input_data.get('detail', {}).get('empleado_id') or input_data.get('empleado_id', 'SYSTEM')
     
     # 1. Enqueue to SQS Cocina
     message_body = {
@@ -29,19 +30,22 @@ def handler(event, context):
     )
     
     # 2. Save Token and Status to DynamoDB
-    table = dynamodb.Table(TABLE_HISTORIAL)
+    table = dynamodb.Table(TABLE_HISTORIAL_ESTADOS)
     timestamp = datetime.utcnow().isoformat()
     
     item = {
         'id_pedido': order_id,
         'createdAt': timestamp,
-        'status': 'PROCESANDO_PEDIDO',
+        'estado': 'procesando',
         'taskToken': task_token,
-        'history': input_data
+        'hora_inicio': timestamp,
+        'empleado': empleado_id,
+        'details': input_data
     }
     table.put_item(Item=item)
     
     return {
         "status": "EN_COLA_COCINA",
-        "order_id": order_id
+        "order_id": order_id,
+        "empleado_id": empleado_id
     }

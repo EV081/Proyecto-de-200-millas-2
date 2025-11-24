@@ -6,7 +6,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
       "Parameters": {
-        "FunctionName": "arn:aws:lambda:us-east-1:368499777044:function:service-orders-200-millas-dev-procesarPedido",
+        "FunctionName": "service-orders-200-millas-dev-procesarPedido",
         "Payload": {
           "taskToken.$": "$$.Task.Token",
           "input.$": "$"
@@ -18,7 +18,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
       "Parameters": {
-        "FunctionName": "arn:aws:lambda:us-east-1:368499777044:function:service-orders-200-millas-dev-pedidoEnCocina",
+        "FunctionName": "service-orders-200-millas-dev-pedidoEnCocina",
         "Payload": {
           "taskToken.$": "$$.Task.Token",
           "input.$": "$"
@@ -41,7 +41,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke",
       "Parameters": {
-        "FunctionName": "arn:aws:lambda:us-east-1:368499777044:function:service-orders-200-millas-dev-reintentarCocina",
+        "FunctionName": "service-orders-200-millas-dev-reintentarCocina",
         "Payload": {
           "input.$": "$"
         }
@@ -64,7 +64,7 @@
         {
           "Variable": "$.retry_count",
           "NumericLessThanEquals": 3,
-          "Next": "ProcesarPedido"
+          "Next": "PedidoEnCocina"
         }
       ],
       "Default": "CocinaFallida"
@@ -78,7 +78,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
       "Parameters": {
-        "FunctionName": "arn:aws:lambda:us-east-1:368499777044:function:service-orders-200-millas-dev-cocinaCompleta",
+        "FunctionName": "service-orders-200-millas-dev-cocinaCompleta",
         "Payload": {
           "taskToken.$": "$$.Task.Token",
           "input.$": "$"
@@ -90,7 +90,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
       "Parameters": {
-        "FunctionName": "arn:aws:lambda:us-east-1:368499777044:function:service-orders-200-millas-dev-empaquetado",
+        "FunctionName": "service-orders-200-millas-dev-empaquetado",
         "Payload": {
           "taskToken.$": "$$.Task.Token",
           "input.$": "$"
@@ -102,7 +102,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
       "Parameters": {
-        "FunctionName": "arn:aws:lambda:us-east-1:368499777044:function:service-orders-200-millas-dev-delivery",
+        "FunctionName": "service-orders-200-millas-dev-delivery",
         "Payload": {
           "taskToken.$": "$$.Task.Token",
           "input.$": "$"
@@ -125,7 +125,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke",
       "Parameters": {
-        "FunctionName": "arn:aws:lambda:us-east-1:368499777044:function:service-orders-200-millas-dev-reintentarDelivery",
+        "FunctionName": "service-orders-200-millas-dev-reintentarDelivery",
         "Payload": {
           "input.$": "$"
         }
@@ -148,7 +148,7 @@
         {
           "Variable": "$.retry_count",
           "NumericLessThanEquals": 3,
-          "Next": "Empaquetado"
+          "Next": "Delivery"
         }
       ],
       "Default": "DeliveryFallido"
@@ -162,7 +162,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
       "Parameters": {
-        "FunctionName": "arn:aws:lambda:us-east-1:368499777044:function:service-orders-200-millas-dev-entregado",
+        "FunctionName": "service-orders-200-millas-dev-entregado",
         "Payload": {
           "taskToken.$": "$$.Task.Token",
           "input.$": "$"
@@ -174,7 +174,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke",
       "Parameters": {
-        "FunctionName": "arn:aws:lambda:us-east-1:368499777044:function:service-orders-200-millas-dev-entregaCompleta",
+        "FunctionName": "service-orders-200-millas-dev-entregaCompleta",
         "Payload": {
           "input.$": "$"
         }
