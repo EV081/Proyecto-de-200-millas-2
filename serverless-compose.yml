@@ -20,3 +20,9 @@ services:
     path: clientes
     dependsOn:
       - dependencias
+
+  service-empleados:
+    path: servicio-empleados
+
+  stepFunction:
+    path: stepFunction

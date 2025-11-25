@@ -72,19 +72,18 @@ def lambda_handler(event, context):
         return _resp(400, {"error": "Faltan campos local_id y/o pedido_id"})
 
     # Verificar propiedad y actualizar estado a 'recibido'
-    tenant_id = os.getenv("TENANT_ID", "millas")
-    expected_tenant_usuario = f"{tenant_id}#{correo_token}"
+    expected_correo = correo_token
     
     try:
         # Condición: el pedido existe y pertenece al usuario del token
         resp = pedidos_table.update_item(
             Key={"local_id": local_id, "pedido_id": pedido_id},
             UpdateExpression="SET #estado = :recibido",
-            ConditionExpression="attribute_exists(local_id) AND attribute_exists(pedido_id) AND tenant_id_usuario = :tenant_usuario",
+            ConditionExpression="attribute_exists(local_id) AND attribute_exists(pedido_id) AND correo = :correo_token",
             ExpressionAttributeNames={"#estado": "estado"},
             ExpressionAttributeValues={
                 ":recibido": "recibido",
-                ":tenant_usuario": expected_tenant_usuario
+                ":correo_token": expected_correo
             },
             ReturnValues="ALL_NEW"
         )

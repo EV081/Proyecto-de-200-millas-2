@@ -77,9 +77,9 @@ def lambda_handler(event, context):
 
     # AutZ: el pedido debe pertenecer al usuario del token
     # Verificar usando tenant_id_usuario
-    tenant_id = os.getenv("TENANT_ID", "millas")
-    expected_tenant_usuario = f"{tenant_id}#{correo_token}"
-    if item.get("tenant_id_usuario") != expected_tenant_usuario:
+    # Verificar usando correo
+    expected_correo = correo_token
+    if item.get("correo") != expected_correo:
         return _resp(403, {"error": "No autorizado a consultar este pedido"})
 
     # Respuesta mínima (estado del pedido)

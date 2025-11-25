@@ -94,7 +94,7 @@ def _publish_crear_pedido_event(item):
     }
     try:
         eventbridge.put_events(Entries=[{
-            "Source": "service-pedidos",
+            "Source": "200millas.pedidos",
             "DetailType": "CrearPedido",
             "Detail": json.dumps(detail, ensure_ascii=False)
         }])
@@ -132,13 +132,12 @@ def lambda_handler(event, context):
     # Generar ID y timestamps
     pedido_id = str(uuid.uuid4())
     now_iso = _now_iso()
-    tenant_id = os.getenv("TENANT_ID", "millas")
 
     # Construir item con nueva estructura
     item = {
         "local_id": body["local_id"],                           # PK (cambió de tenant_id)
         "pedido_id": pedido_id,                                  # SK
-        "tenant_id_usuario": f"{tenant_id}#{correo_token}",     # GSI by_usuario_v2
+        "correo": correo_token,                       # GSI by_usuario_v2 (solo correo)
         "productos": body["productos"],                         # Ahora usa producto_id
         "costo": Decimal(str(body["costo"])),
         "direccion": body["direccion"],

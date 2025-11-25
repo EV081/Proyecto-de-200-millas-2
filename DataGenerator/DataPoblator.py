@@ -508,14 +508,14 @@ def create_all_resources():
         attribute_definitions=[
             {'AttributeName': 'local_id', 'AttributeType': 'S'},
             {'AttributeName': 'pedido_id', 'AttributeType': 'S'},
-            {'AttributeName': 'tenant_id_usuario', 'AttributeType': 'S'},
+            {'AttributeName': 'correo', 'AttributeType': 'S'},
             {'AttributeName': 'created_at', 'AttributeType': 'S'}
         ],
         global_secondary_indexes=[
             {
                 'IndexName': 'by_usuario_v2',
                 'KeySchema': [
-                    {'AttributeName': 'tenant_id_usuario', 'KeyType': 'HASH'},
+                    {'AttributeName': 'correo', 'KeyType': 'HASH'},
                     {'AttributeName': 'created_at', 'KeyType': 'RANGE'}
                 ],
                 'Projection': {'ProjectionType': 'ALL'}

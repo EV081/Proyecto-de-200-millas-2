@@ -177,28 +177,6 @@ deploy_services() {
   echo -e "${YELLOW}📦 Desplegando servicios principales...${NC}"
   sls deploy
   
-  # Desplegar Step Functions
-  if [[ -d "stepFunction" ]]; then
-    echo -e "${YELLOW}⚙️  Desplegando Step Functions...${NC}"
-    pushd stepFunction > /dev/null
-    sls deploy
-    popd > /dev/null
-    echo -e "${GREEN}✅ Step Functions desplegado${NC}"
-  else
-    echo -e "${YELLOW}ℹ️  No se encontró directorio stepFunction, saltando...${NC}"
-  fi
-  
-  # Desplegar servicio de empleados
-  if [[ -d "servicio-empleados" ]]; then
-    echo -e "${YELLOW}👥 Desplegando servicio de empleados...${NC}"
-    pushd servicio-empleados > /dev/null
-    sls deploy
-    popd > /dev/null
-    echo -e "${GREEN}✅ Servicio de empleados desplegado${NC}"
-  else
-    echo -e "${YELLOW}ℹ️  No se encontró directorio servicio-empleados, saltando...${NC}"
-  fi
-  
   echo -e "${GREEN}✅ Todos los microservicios desplegados${NC}"
 }
 

@@ -219,7 +219,7 @@ def generar_pedidos_y_historial(locales, usuarios, productos, cantidad=None):
         pedido = {
             "local_id": local_id,                                    # PK (cambió de tenant_id)
             "pedido_id": pedido_id,                                  # SK
-            "tenant_id_usuario": f"{TENANT_ID}#{cliente['correo']}", # GSI by_usuario_v2
+            "correo": cliente['correo'],                             # GSI by_usuario_v2 (solo correo)
             "productos": productos_pedido,                           # Ahora usa producto_id
             "costo": round(costo, 2),
             "direccion": f"Calle {random.randint(1,200)} #{random.randint(100,999)}",
