@@ -10,6 +10,7 @@ provider:
     role: arn:aws:iam::${env:AWS_ACCOUNT_ID}:role/LabRole
   environment:
     EVENT_BUS_NAME: default
+    TABLE_PEDIDOS: ${env:TABLE_PEDIDOS}
   httpApi:
     cors: true
 
@@ -58,6 +59,15 @@ functions:
           path: /empleados/delivery/entregar
           method: POST
     description: "Trigger EntregaDelivery event when delivery person delivers order"
+
+  # List Orders by Restaurant
+  listPedidosRestaurante:
+    handler: pedidos_restaurante.lambda_handler
+    events:
+      - httpApi:
+          path: /empleados/pedidos/restaurante
+          method: POST
+    description: "List all orders for a restaurant with filters by category and name"
 
 package:
   patterns:

@@ -79,6 +79,7 @@ def lambda_handler(event, context):
 
     # Filtros y paginación
     categoria = body.get("categoria")
+    nombre = body.get("nombre")  # Nuevo filtro por nombre
     size = _safe_int(body.get("size", body.get("limit", 10)), 10)
     if size <= 0 or size > 100:
         size = 10
@@ -113,8 +114,19 @@ def lambda_handler(event, context):
             "KeyConditionExpression": key_cond,
             "Select": "COUNT"
         }
+        # Construir FilterExpression para count
+        filter_parts = []
         if categoria:
-            count_args["FilterExpression"] = Attr("categoria").eq(categoria)
+            filter_parts.append(Attr("categoria").eq(categoria))
+        if nombre:
+            filter_parts.append(Attr("nombre").contains(nombre))
+        
+        if filter_parts:
+            filter_expr = filter_parts[0]
+            for f in filter_parts[1:]:
+                filter_expr = filter_expr & f
+            count_args["FilterExpression"] = filter_expr
+        
         count_lek = None
         while True:
             if count_lek:
@@ -140,8 +152,18 @@ def lambda_handler(event, context):
         "KeyConditionExpression": key_cond,
         "Limit": size
     }
+    # Construir FilterExpression para query principal
+    filter_parts = []
     if categoria:
-        qargs["FilterExpression"] = Attr("categoria").eq(categoria)
+        filter_parts.append(Attr("categoria").eq(categoria))
+    if nombre:
+        filter_parts.append(Attr("nombre").contains(nombre))
+    
+    if filter_parts:
+        filter_expr = filter_parts[0]
+        for f in filter_parts[1:]:
+            filter_expr = filter_expr & f
+        qargs["FilterExpression"] = filter_expr
 
     if lek:
         qargs["ExclusiveStartKey"] = lek

@@ -39,3 +39,11 @@ functions:
           path: /pedido/confirmar
           method: POST
     description: "Trigger ConfirmarPedidoCliente event when customer confirms receipt"
+
+  GetPedidoHistorial:
+    handler: pedido_historial.lambda_handler
+    events:
+      - httpApi:
+          method: POST
+          path: /pedido/historial
+    description: "Get paginated order history for authenticated customer"
