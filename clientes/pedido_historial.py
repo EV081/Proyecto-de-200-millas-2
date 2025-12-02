@@ -111,51 +111,70 @@ def lambda_handler(event, context):
     next_token_in = body.get("next_token")
     lek = _decode_token(next_token_in)
 
-    # Scan con filtro por correo (ya que el GSI by_usuario_v2 no existe en la tabla actual)
-    # Nota: Scan con FilterExpression puede requerir múltiples llamadas para encontrar items
-    scan_args = {
-        "FilterExpression": Attr("correo").eq(correo_token)
-    }
-
-    if lek:
-        scan_args["ExclusiveStartKey"] = lek
-
+    # Intentar usar GSI by_usuario_v2 primero (más eficiente)
+    # Si falla, usar Scan como fallback
     items = []
-    scanned_count = 0
-    max_scans = 10  # Límite de seguridad para evitar escanear toda la tabla
+    lek_out = None
     
     try:
-        # Continuar escaneando hasta encontrar suficientes items o llegar al final
-        while len(items) < size and scanned_count < max_scans:
-            response = pedidos_table.scan(**scan_args)
-            found_items = response.get("Items", [])
-            items.extend(found_items)
-            scanned_count += 1
-            
-            lek_out = response.get("LastEvaluatedKey")
-            if not lek_out:
-                # No hay más items en la tabla
-                break
-            
-            # Si ya tenemos suficientes items, parar
-            if len(items) >= size:
-                break
-                
-            # Continuar desde donde quedamos
-            scan_args["ExclusiveStartKey"] = lek_out
-            
-        print(f"Scan completado: {len(items)} pedidos encontrados después de {scanned_count} scan(s)")
+        # Intentar Query con GSI (método eficiente)
+        query_args = {
+            "IndexName": "by_usuario_v2",
+            "KeyConditionExpression": Key("correo").eq(correo_token),
+            "Limit": size,
+            "ScanIndexForward": False  # Ordenar por created_at descendente
+        }
+        
+        if lek:
+            query_args["ExclusiveStartKey"] = lek
+        
+        response = pedidos_table.query(**query_args)
+        items = response.get("Items", [])
+        lek_out = response.get("LastEvaluatedKey")
+        print(f"Query con GSI exitoso: {len(items)} pedidos encontrados")
         
     except ClientError as e:
-        print(f"Error scan pedidos: {e}")
-        return _resp(500, {"error": "Error consultando historial de pedidos"})
-
-    # Limitar a size items
-    if len(items) > size:
-        items = items[:size]
+        # Si el GSI no existe, usar Scan como fallback
+        if "ResourceNotFoundException" in str(e) or "ValidationException" in str(e):
+            print(f"GSI no disponible, usando Scan como fallback: {e}")
+            
+            scan_args = {
+                "FilterExpression": Attr("correo").eq(correo_token)
+            }
+            
+            if lek:
+                scan_args["ExclusiveStartKey"] = lek
+            
+            scanned_count = 0
+            max_scans = 10  # Límite de seguridad
+            
+            try:
+                # Continuar escaneando hasta encontrar suficientes items
+                while len(items) < size and scanned_count < max_scans:
+                    response = pedidos_table.scan(**scan_args)
+                    found_items = response.get("Items", [])
+                    items.extend(found_items)
+                    scanned_count += 1
+                    
+                    lek_out = response.get("LastEvaluatedKey")
+                    if not lek_out or len(items) >= size:
+                        break
+                    
+                    scan_args["ExclusiveStartKey"] = lek_out
+                
+                print(f"Scan completado: {len(items)} pedidos encontrados después de {scanned_count} scan(s)")
+                
+                # Limitar a size items
+                if len(items) > size:
+                    items = items[:size]
+                    
+            except ClientError as scan_error:
+                print(f"Error en Scan: {scan_error}")
+                return _resp(500, {"error": "Error consultando historial de pedidos"})
+        else:
+            print(f"Error en Query: {e}")
+            return _resp(500, {"error": "Error consultando historial de pedidos"})
     
-    # Si encontramos items, el next_token es el último LEK
-    # Si no encontramos items pero hay más datos, devolver el LEK para continuar
     next_token_out = _encode_token(lek_out) if lek_out else None
     
     # Ordenar por fecha (created_at) descendente - más recientes primero

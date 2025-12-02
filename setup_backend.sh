@@ -118,6 +118,58 @@ upload_airflow_dag() {
   # echo -e "${GREEN}✅ DAG actualizado${NC}"
 }
 
+create_gsi_if_needed() {
+  local table_name="${TABLE_PEDIDOS}"
+  
+  echo -e "${BLUE}🔍 Verificando GSI by_usuario_v2 en tabla ${table_name}...${NC}"
+  
+  # Verificar si la tabla existe
+  if ! aws dynamodb describe-table --table-name "${table_name}" --region "${AWS_REGION}" >/dev/null 2>&1; then
+    echo -e "${YELLOW}   Tabla ${table_name} no existe aún${NC}"
+    return 0
+  fi
+  
+  # Verificar si el GSI ya existe
+  local gsi_exists=$(aws dynamodb describe-table \
+    --table-name "${table_name}" \
+    --region "${AWS_REGION}" \
+    --query "Table.GlobalSecondaryIndexes[?IndexName=='by_usuario_v2'].IndexName" \
+    --output text 2>/dev/null)
+  
+  if [[ -n "$gsi_exists" ]]; then
+    echo -e "${GREEN}   ✅ GSI by_usuario_v2 ya existe${NC}"
+    return 0
+  fi
+  
+  echo -e "${YELLOW}   📝 Creando GSI by_usuario_v2...${NC}"
+  
+  # Crear el GSI
+  aws dynamodb update-table \
+    --table-name "${table_name}" \
+    --attribute-definitions \
+      AttributeName=correo,AttributeType=S \
+      AttributeName=created_at,AttributeType=S \
+    --global-secondary-index-updates \
+      "[{
+        \"Create\": {
+          \"IndexName\": \"by_usuario_v2\",
+          \"KeySchema\": [
+            {\"AttributeName\": \"correo\", \"KeyType\": \"HASH\"},
+            {\"AttributeName\": \"created_at\", \"KeyType\": \"RANGE\"}
+          ],
+          \"Projection\": {\"ProjectionType\": \"ALL\"},
+          \"ProvisionedThroughput\": {\"ReadCapacityUnits\": 5, \"WriteCapacityUnits\": 5}
+        }
+      }]" \
+    --region "${AWS_REGION}" 2>/dev/null
+  
+  if [[ $? -eq 0 ]]; then
+    echo -e "${GREEN}   ✅ GSI by_usuario_v2 creado (puede tardar varios minutos en estar activo)${NC}"
+  else
+    echo -e "${YELLOW}   ⚠️  No se pudo crear el GSI (puede que ya exista o la tabla esté en uso)${NC}"
+  fi
+}
+
 create_dynamodb_tables() {
   echo -e "${BLUE}📚 Creando tablas DynamoDB...${NC}"
   
@@ -153,12 +205,27 @@ create_dynamodb_tables() {
     --billing-mode PAY_PER_REQUEST \
     --region "${AWS_REGION}" 2>/dev/null || echo "   Tabla ${TABLE_PRODUCTOS} ya existe"
   
-  # Tabla Pedidos
+  # Tabla Pedidos (con GSI by_usuario_v2)
   aws dynamodb create-table \
     --table-name "${TABLE_PEDIDOS}" \
-    --attribute-definitions AttributeName=local_id,AttributeType=S AttributeName=pedido_id,AttributeType=S \
+    --attribute-definitions \
+      AttributeName=local_id,AttributeType=S \
+      AttributeName=pedido_id,AttributeType=S \
+      AttributeName=correo,AttributeType=S \
+      AttributeName=created_at,AttributeType=S \
     --key-schema AttributeName=local_id,KeyType=HASH AttributeName=pedido_id,KeyType=RANGE \
-    --billing-mode PAY_PER_REQUEST \
+    --global-secondary-indexes \
+      "[{
+        \"IndexName\": \"by_usuario_v2\",
+        \"KeySchema\": [
+          {\"AttributeName\": \"correo\", \"KeyType\": \"HASH\"},
+          {\"AttributeName\": \"created_at\", \"KeyType\": \"RANGE\"}
+        ],
+        \"Projection\": {\"ProjectionType\": \"ALL\"},
+        \"ProvisionedThroughput\": {\"ReadCapacityUnits\": 5, \"WriteCapacityUnits\": 5}
+      }]" \
+    --billing-mode PROVISIONED \
+    --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
     --region "${AWS_REGION}" 2>/dev/null || echo "   Tabla ${TABLE_PEDIDOS} ya existe"
   
   # Tabla Historial Estados
@@ -182,6 +249,9 @@ create_dynamodb_tables() {
   # Esperar a que las tablas estén activas
   echo -e "${YELLOW}⏳ Esperando a que las tablas estén activas...${NC}"
   sleep 5
+  
+  # Crear GSI si la tabla ya existía sin él
+  create_gsi_if_needed
 }
 
 deploy_infrastructure() {
@@ -555,6 +625,7 @@ show_deployment_summary() {
   echo ""
   echo -e "${GREEN}✅ Infraestructura:${NC}"
   echo "   • 7 tablas DynamoDB creadas"
+  echo "   • GSI by_usuario_v2 creado en tabla de pedidos (búsqueda eficiente por usuario)"
   echo "   • Bucket S3 de imágenes: ${S3_BUCKET_NAME}"
   echo "   • Buckets de analytics creados"
   echo ""
