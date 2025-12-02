@@ -94,6 +94,8 @@ def lambda_handler(event, context):
     if not correo_token:
         return _resp(403, {"error": "Token sin correo asociado"})
     
+    print(f"Buscando pedidos para correo: {correo_token}")
+    
     # Verificar que sea Cliente
     if rol.lower() != "cliente":
         return _resp(403, {"error": "Permiso denegado: se requiere rol 'cliente'"})
@@ -126,6 +128,10 @@ def lambda_handler(event, context):
 
     items = response.get("Items", [])
     lek_out = response.get("LastEvaluatedKey")
+    
+    print(f"Scan encontró {len(items)} pedidos. ScannedCount: {response.get('ScannedCount', 0)}, Count: {response.get('Count', 0)}")
+    if items:
+        print(f"Primer pedido correo: {items[0].get('correo')}")
     
     # Ordenar por fecha (created_at) descendente - más recientes primero
     items.sort(key=lambda x: x.get("created_at", ""), reverse=True)
