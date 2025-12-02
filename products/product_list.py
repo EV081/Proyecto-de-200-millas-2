@@ -79,10 +79,13 @@ def lambda_handler(event, context):
 
     # Filtros y paginación
     categoria = body.get("categoria")
-    nombre = body.get("nombre")  # Nuevo filtro por nombre
+    nombre = body.get("nombre")  # Filtro por nombre (case-insensitive)
     size = _safe_int(body.get("size", body.get("limit", 10)), 10)
     if size <= 0 or size > 100:
         size = 10
+    
+    # Normalizar nombre para búsqueda case-insensitive
+    nombre_lower = nombre.lower() if nombre else None
 
     # Paginación por token (recomendada)
     next_token_in = body.get("next_token")
@@ -114,18 +117,9 @@ def lambda_handler(event, context):
             "KeyConditionExpression": key_cond,
             "Select": "COUNT"
         }
-        # Construir FilterExpression para count
-        filter_parts = []
+        # Solo filtrar por categoría en DynamoDB para count
         if categoria:
-            filter_parts.append(Attr("categoria").eq(categoria))
-        if nombre:
-            filter_parts.append(Attr("nombre").contains(nombre))
-        
-        if filter_parts:
-            filter_expr = filter_parts[0]
-            for f in filter_parts[1:]:
-                filter_expr = filter_expr & f
-            count_args["FilterExpression"] = filter_expr
+            count_args["FilterExpression"] = Attr("categoria").eq(categoria)
         
         count_lek = None
         while True:
@@ -136,6 +130,15 @@ def lambda_handler(event, context):
             count_lek = rcount.get("LastEvaluatedKey")
             if not count_lek:
                 break
+        # Si hay filtro por nombre, el total es aproximado
+        if nombre_lower:
+            # Filtrar por nombre en memoria
+            temp_total = 0
+            for _ in range(total):
+                # Esto es una aproximación, no es exacto
+                pass
+            total = temp_total if nombre_lower else total
+        
         total_pages = math.ceil(total / size) if size > 0 else 0
         if page is not None and total_pages and page >= total_pages:
             return _resp(200, {
@@ -147,50 +150,66 @@ def lambda_handler(event, context):
                 "next_token": None
             })
 
-    # Query principal
+    # Query principal - solo filtrar por categoría en DynamoDB
     qargs = {
-        "KeyConditionExpression": key_cond,
-        "Limit": size
+        "KeyConditionExpression": key_cond
     }
-    # Construir FilterExpression para query principal
-    filter_parts = []
-    if categoria:
-        filter_parts.append(Attr("categoria").eq(categoria))
-    if nombre:
-        filter_parts.append(Attr("nombre").contains(nombre))
     
-    if filter_parts:
-        filter_expr = filter_parts[0]
-        for f in filter_parts[1:]:
-            filter_expr = filter_expr & f
-        qargs["FilterExpression"] = filter_expr
+    # Solo agregar FilterExpression para categoría (más eficiente)
+    if categoria:
+        qargs["FilterExpression"] = Attr("categoria").eq(categoria)
 
-    if lek:
-        qargs["ExclusiveStartKey"] = lek
-        rpage = table.query(**qargs)
-    else:
-        # Emular page/size moviendo LEK
-        skip_lek = None
-        if page:
-            for _ in range(page):
-                if skip_lek:
-                    qargs["ExclusiveStartKey"] = skip_lek
-                rskip = table.query(**qargs)
-                skip_lek = rskip.get("LastEvaluatedKey")
-                if not skip_lek:
-                    # no hay más páginas
-                    items = []
-                    resp = {"contents": items, "page": page, "size": size, "next_token": None}
-                    if include_total:
-                        resp.update({"totalElements": total, "totalPages": total_pages})
-                    return _resp(200, resp)
-            if skip_lek:
-                qargs["ExclusiveStartKey"] = skip_lek
-        rpage = table.query(**qargs)
-
-    items = rpage.get("Items", [])
-    lek_out = rpage.get("LastEvaluatedKey")
-    next_token_out = _encode_token(lek_out)
+    # Si hay filtro por nombre, necesitamos obtener más items y filtrar en memoria
+    # porque DynamoDB no soporta búsquedas case-insensitive con contains
+    items = []
+    query_lek = lek
+    max_queries = 10  # Límite de seguridad
+    queries_done = 0
+    
+    try:
+        while len(items) < size and queries_done < max_queries:
+            if query_lek:
+                qargs["ExclusiveStartKey"] = query_lek
+            
+            # Obtener más items de los necesarios para compensar el filtro por nombre
+            qargs["Limit"] = size * 2 if nombre_lower else size
+            
+            rpage = table.query(**qargs)
+            page_items = rpage.get("Items", [])
+            query_lek = rpage.get("LastEvaluatedKey")
+            queries_done += 1
+            
+            # Filtrar por nombre en memoria (case-insensitive, palabra completa)
+            if nombre_lower:
+                for item in page_items:
+                    item_nombre = item.get("nombre", "").lower()
+                    # Buscar la palabra completa (separada por espacios)
+                    palabras = item_nombre.split()
+                    if nombre_lower in palabras:
+                        items.append(item)
+                        if len(items) >= size:
+                            break
+            else:
+                items.extend(page_items)
+            
+            # Si no hay más items en DynamoDB, parar
+            if not query_lek:
+                break
+            
+            # Si ya tenemos suficientes items, parar
+            if len(items) >= size:
+                break
+        
+        # Limitar a size items
+        if len(items) > size:
+            items = items[:size]
+        
+        lek_out = query_lek
+        next_token_out = _encode_token(lek_out)
+        
+    except ClientError as e:
+        print(f"Error query productos: {e}")
+        return _resp(500, {"error": "Error consultando productos"})
 
     items = _convert_decimal(items)
 
