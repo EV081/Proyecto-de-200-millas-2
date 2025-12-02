@@ -112,26 +112,51 @@ def lambda_handler(event, context):
     lek = _decode_token(next_token_in)
 
     # Scan con filtro por correo (ya que el GSI by_usuario_v2 no existe en la tabla actual)
+    # Nota: Scan con FilterExpression puede requerir múltiples llamadas para encontrar items
     scan_args = {
-        "FilterExpression": Attr("correo").eq(correo_token),
-        "Limit": size
+        "FilterExpression": Attr("correo").eq(correo_token)
     }
 
     if lek:
         scan_args["ExclusiveStartKey"] = lek
 
+    items = []
+    scanned_count = 0
+    max_scans = 10  # Límite de seguridad para evitar escanear toda la tabla
+    
     try:
-        response = pedidos_table.scan(**scan_args)
+        # Continuar escaneando hasta encontrar suficientes items o llegar al final
+        while len(items) < size and scanned_count < max_scans:
+            response = pedidos_table.scan(**scan_args)
+            found_items = response.get("Items", [])
+            items.extend(found_items)
+            scanned_count += 1
+            
+            lek_out = response.get("LastEvaluatedKey")
+            if not lek_out:
+                # No hay más items en la tabla
+                break
+            
+            # Si ya tenemos suficientes items, parar
+            if len(items) >= size:
+                break
+                
+            # Continuar desde donde quedamos
+            scan_args["ExclusiveStartKey"] = lek_out
+            
+        print(f"Scan completado: {len(items)} pedidos encontrados después de {scanned_count} scan(s)")
+        
     except ClientError as e:
         print(f"Error scan pedidos: {e}")
         return _resp(500, {"error": "Error consultando historial de pedidos"})
 
-    items = response.get("Items", [])
-    lek_out = response.get("LastEvaluatedKey")
+    # Limitar a size items
+    if len(items) > size:
+        items = items[:size]
     
-    print(f"Scan encontró {len(items)} pedidos. ScannedCount: {response.get('ScannedCount', 0)}, Count: {response.get('Count', 0)}")
-    if items:
-        print(f"Primer pedido correo: {items[0].get('correo')}")
+    # Si encontramos items, el next_token es el último LEK
+    # Si no encontramos items pero hay más datos, devolver el LEK para continuar
+    next_token_out = _encode_token(lek_out) if lek_out else None
     
     # Ordenar por fecha (created_at) descendente - más recientes primero
     items.sort(key=lambda x: x.get("created_at", ""), reverse=True)
