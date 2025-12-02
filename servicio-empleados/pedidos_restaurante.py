@@ -72,6 +72,12 @@ def _filter_productos(productos, categoria=None, nombre=None):
     
     return filtered
 
+def _matches_estado(pedido_estado, estado_filter):
+    """Verifica si el estado del pedido coincide con el filtro"""
+    if not estado_filter:
+        return True
+    return pedido_estado == estado_filter
+
 def lambda_handler(event, context):
     # CORS preflight
     method = event.get("httpMethod") or event.get("requestContext", {}).get("http", {}).get("method")
@@ -95,6 +101,7 @@ def lambda_handler(event, context):
     # Filtros opcionales
     categoria = body.get("categoria")
     nombre = body.get("nombre")
+    estado = body.get("estado")  # Nuevo filtro por estado
     
     # Paginación
     size = _safe_int(body.get("size", body.get("limit", 10)), 10)
@@ -127,10 +134,15 @@ def lambda_handler(event, context):
     items = response.get("Items", [])
     lek_out = response.get("LastEvaluatedKey")
 
-    # Filtrar productos dentro de cada pedido si se especificaron filtros
-    if categoria or nombre:
-        filtered_items = []
-        for item in items:
+    # Aplicar filtros
+    filtered_items = []
+    for item in items:
+        # Filtrar por estado si se especificó
+        if estado and not _matches_estado(item.get("estado"), estado):
+            continue
+        
+        # Filtrar productos dentro del pedido si se especificaron filtros de producto
+        if categoria or nombre:
             productos = item.get("productos", [])
             productos_filtrados = _filter_productos(productos, categoria, nombre)
             
@@ -139,8 +151,14 @@ def lambda_handler(event, context):
                 item_copy = item.copy()
                 item_copy["productos"] = productos_filtrados
                 filtered_items.append(item_copy)
-        
-        items = filtered_items
+        else:
+            # Sin filtros de producto, incluir el pedido completo
+            filtered_items.append(item)
+    
+    items = filtered_items
+
+    # Ordenar por fecha (created_at) descendente
+    items.sort(key=lambda x: x.get("created_at", ""), reverse=True)
 
     next_token_out = _encode_token(lek_out)
     items = _convert_decimal(items)
