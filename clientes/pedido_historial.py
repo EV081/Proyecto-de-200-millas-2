@@ -109,27 +109,28 @@ def lambda_handler(event, context):
     next_token_in = body.get("next_token")
     lek = _decode_token(next_token_in)
 
-    # Query usando GSI by_usuario_v2 (correo como PK, created_at como SK)
-    qargs = {
-        "IndexName": "by_usuario_v2",
-        "KeyConditionExpression": Key("correo").eq(correo_token),
-        "Limit": size,
-        "ScanIndexForward": False  # Ordenar por created_at descendente (más reciente primero)
+    # Scan con filtro por correo (ya que el GSI by_usuario_v2 no existe en la tabla actual)
+    scan_args = {
+        "FilterExpression": Key("correo").eq(correo_token),
+        "Limit": size
     }
 
     if lek:
-        qargs["ExclusiveStartKey"] = lek
+        scan_args["ExclusiveStartKey"] = lek
 
     try:
-        response = pedidos_table.query(**qargs)
+        response = pedidos_table.scan(**scan_args)
     except ClientError as e:
-        print(f"Error query pedidos: {e}")
+        print(f"Error scan pedidos: {e}")
         return _resp(500, {"error": "Error consultando historial de pedidos"})
 
     items = response.get("Items", [])
     lek_out = response.get("LastEvaluatedKey")
+    
+    # Ordenar por fecha (created_at) descendente - más recientes primero
+    items.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+    
     next_token_out = _encode_token(lek_out)
-
     items = _convert_decimal(items)
 
     resp = {
