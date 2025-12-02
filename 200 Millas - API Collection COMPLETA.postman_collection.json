@@ -4,7 +4,8 @@
 		"name": "200 Millas - API Collection COMPLETA",
 		"description": "Colección completa con TODOS los endpoints del proyecto",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "43507435"
+		"_exporter_id": "43507435",
+		"_collection_link": "https://bold-crescent-20177.postman.co/workspace/My-Workspace~3b0820c5-a856-4cb8-8910-b6780db52428/collection/43507435-44899cc6-5906-4cc1-9654-24b4757ac9bf?action=share&source=collection_link&creator=43507435"
 	},
 	"item": [
 		{
@@ -1024,6 +1025,197 @@
 					]
 				},
 				{
+					"name": "Listar Pedidos",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"local_id\": \"{{local_id}}\",\n    \"estado\": \"recibido\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{empleado_url}}/empleados/pedidos/restaurante",
+							"host": [
+								"{{empleado_url}}"
+							],
+							"path": [
+								"empleados",
+								"pedidos",
+								"restaurante"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "New Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"local_id\": \"{{local_id}}\",\n    \"estado\": \"cocinando\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{empleado_url}}/empleados/pedidos/restaurante",
+									"host": [
+										"{{empleado_url}}"
+									],
+									"path": [
+										"empleados",
+										"pedidos",
+										"restaurante"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 02 Dec 2025 21:02:13 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "475"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Apigw-Requestid",
+									"value": "U-oJNgbCoAMEMIg="
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"pedidos\": [\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"correo\": \"jose.perez@hotmail.com\",\n            \"created_at\": \"2025-12-02T19:57:42.924943\",\n            \"productos\": [\n                {\n                    \"producto_id\": \"LOCAL-001#Ceviches 38\",\n                    \"cantidad\": 2\n                }\n            ],\n            \"estado\": \"cocinando\",\n            \"costo\": 57.16,\n            \"direccion\": \"Calle 51 #659\",\n            \"pedido_id\": \"8d92070e-5f38-42f8-9a9b-f791112a2023\"\n        }\n    ],\n    \"size\": 10,\n    \"next_token\": \"eyJwZWRpZG9faWQiOiAiNzRiYzVkODUtZjRhZC00YjZhLWJkYmItMDMxZDBmOTQ4OTkwIiwgImxvY2FsX2lkIjogIkxPQ0FMLTAwMSJ9\",\n    \"local_id\": \"LOCAL-001\"\n}"
+						},
+						{
+							"name": "New Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"local_id\": \"{{local_id}}\",\n    \"estado\": \"cocinando\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{empleado_url}}/empleados/pedidos/restaurante",
+									"host": [
+										"{{empleado_url}}"
+									],
+									"path": [
+										"empleados",
+										"pedidos",
+										"restaurante"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 02 Dec 2025 21:02:26 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "3901"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Apigw-Requestid",
+									"value": "U-oLehAqoAMEY9Q="
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"pedidos\": [\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"correo\": \"luis.fernandez@gmail.com\",\n            \"created_at\": \"2025-12-02T20:51:42.925822\",\n            \"productos\": [\n                {\n                    \"producto_id\": \"LOCAL-001#Duos Marinos 34\",\n                    \"cantidad\": 2\n                },\n                {\n                    \"producto_id\": \"LOCAL-001#Fritazo 20\",\n                    \"cantidad\": 1\n                }\n            ],\n            \"estado\": \"procesando\",\n            \"costo\": 208.54,\n            \"direccion\": \"Calle 9 #847\",\n            \"pedido_id\": \"8e006918-b0e6-4b33-be07-8498009b8bb4\"\n        },\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"correo\": \"valentina.ortiz@outlook.com\",\n            \"created_at\": \"2025-12-02T20:46:42.924978\",\n            \"productos\": [\n                {\n                    \"producto_id\": \"LOCAL-001#Express 10\",\n                    \"cantidad\": 3\n                },\n                {\n                    \"producto_id\": \"LOCAL-001#Sopas Power 40\",\n                    \"cantidad\": 2\n                }\n            ],\n            \"estado\": \"procesando\",\n            \"costo\": 325.82,\n            \"direccion\": \"Calle 37 #671\",\n            \"pedido_id\": \"876a8f89-03c1-4638-b77a-61f5c995eb24\"\n        },\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"correo\": \"jose.perez@hotmail.com\",\n            \"created_at\": \"2025-12-02T20:32:42.925288\",\n            \"productos\": [\n                {\n                    \"producto_id\": \"LOCAL-001#Promos Fast 39\",\n                    \"cantidad\": 2\n                },\n                {\n                    \"producto_id\": \"LOCAL-001#Mega Marino 27\",\n                    \"cantidad\": 1\n                }\n            ],\n            \"estado\": \"enviando\",\n            \"costo\": 107.07,\n            \"direccion\": \"Calle 173 #644\",\n            \"pedido_id\": \"74bc5d85-f4ad-4b6a-bdbb-031d0f948990\"\n        },\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"correo\": \"juan.perez@outlook.com\",\n            \"created_at\": \"2025-12-02T20:27:42.924077\",\n            \"productos\": [\n                {\n                    \"producto_id\": \"LOCAL-001#Mega Marino 56\",\n                    \"cantidad\": 1\n                },\n                {\n                    \"producto_id\": \"LOCAL-001#Promociones 4\",\n                    \"cantidad\": 2\n                },\n                {\n                    \"producto_id\": \"LOCAL-001#Promociones 42\",\n                    \"cantidad\": 3\n                }\n            ],\n            \"estado\": \"recibido\",\n            \"costo\": 260.14,\n            \"direccion\": \"Calle 180 #390\",\n            \"pedido_id\": \"c6ad01f6-5316-4435-a831-6ad0d631d2c7\"\n        },\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"correo\": \"diego.flores@outlook.com\",\n            \"created_at\": \"2025-12-02T20:18:42.924475\",\n            \"productos\": [\n                {\n                    \"producto_id\": \"LOCAL-001#Fritazo 54\",\n                    \"cantidad\": 1\n                },\n                {\n                    \"producto_id\": \"LOCAL-001#Express 49\",\n                    \"cantidad\": 1\n                },\n                {\n                    \"producto_id\": \"LOCAL-001#Fritazo 20\",\n                    \"cantidad\": 1\n                },\n                {\n                    \"producto_id\": \"LOCAL-001#Mega Marino 27\",\n                    \"cantidad\": 1\n                }\n            ],\n            \"estado\": \"empacando\",\n            \"costo\": 190.78,\n            \"direccion\": \"Calle 39 #818\",\n            \"pedido_id\": \"76323844-63ab-4075-a6c3-5b66fc518a86\"\n        },\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"correo\": \"ana.fernandez@gmail.com\",\n            \"created_at\": \"2025-12-02T20:10:42.925847\",\n            \"productos\": [\n                {\n                    \"producto_id\": \"LOCAL-001#Promociones 6\",\n                    \"cantidad\": 2\n                }\n            ],\n            \"estado\": \"recibido\",\n            \"costo\": 88.58,\n            \"direccion\": \"Calle 3 #804\",\n            \"pedido_id\": \"c722e2cb-d058-48b0-94e5-fd0b9e1aab3f\"\n        },\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"correo\": \"juan.gonzalez@hotmail.com\",\n            \"created_at\": \"2025-12-02T20:05:42.924648\",\n            \"productos\": [\n                {\n                    \"producto_id\": \"LOCAL-001#Promociones 42\",\n                    \"cantidad\": 1\n                }\n            ],\n            \"estado\": \"enviando\",\n            \"costo\": 43.44,\n            \"direccion\": \"Calle 111 #941\",\n            \"pedido_id\": \"e63bf28d-b742-4b4f-9516-8739ee891290\"\n        },\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"correo\": \"jose.perez@hotmail.com\",\n            \"created_at\": \"2025-12-02T19:57:42.924943\",\n            \"productos\": [\n                {\n                    \"producto_id\": \"LOCAL-001#Ceviches 38\",\n                    \"cantidad\": 2\n                }\n            ],\n            \"estado\": \"cocinando\",\n            \"costo\": 57.16,\n            \"direccion\": \"Calle 51 #659\",\n            \"pedido_id\": \"8d92070e-5f38-42f8-9a9b-f791112a2023\"\n        },\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"correo\": \"juan.gonzalez@hotmail.com\",\n            \"created_at\": \"2025-12-02T19:48:42.925926\",\n            \"productos\": [\n                {\n                    \"producto_id\": \"LOCAL-001#Fritazo 58\",\n                    \"cantidad\": 1\n                },\n                {\n                    \"producto_id\": \"LOCAL-001#Express 10\",\n                    \"cantidad\": 3\n                },\n                {\n                    \"producto_id\": \"LOCAL-001#Ceviches 38\",\n                    \"cantidad\": 3\n                }\n            ],\n            \"estado\": \"procesando\",\n            \"costo\": 345.53,\n            \"direccion\": \"Calle 40 #963\",\n            \"pedido_id\": \"ca7167f4-f6ff-492b-9cbf-e85d80924122\"\n        },\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"correo\": \"diego.flores@outlook.com\",\n            \"created_at\": \"2025-12-02T19:36:42.925401\",\n            \"productos\": [\n                {\n                    \"producto_id\": \"LOCAL-001#Promociones 18\",\n                    \"cantidad\": 1\n                },\n                {\n                    \"producto_id\": \"LOCAL-001#Promociones 4\",\n                    \"cantidad\": 3\n                }\n            ],\n            \"estado\": \"recibido\",\n            \"costo\": 214.4,\n            \"direccion\": \"Calle 65 #936\",\n            \"pedido_id\": \"a5c54737-f3cb-4d7c-9601-e70c5f6aa927\"\n        }\n    ],\n    \"size\": 10,\n    \"next_token\": \"eyJwZWRpZG9faWQiOiAiNzRiYzVkODUtZjRhZC00YjZhLWJkYmItMDMxZDBmOTQ4OTkwIiwgImxvY2FsX2lkIjogIkxPQ0FMLTAwMSJ9\",\n    \"local_id\": \"LOCAL-001\"\n}"
+						},
+						{
+							"name": "New Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"local_id\": \"{{local_id}}\",\n    \"estado\": \"recibido\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{empleado_url}}/empleados/pedidos/restaurante",
+									"host": [
+										"{{empleado_url}}"
+									],
+									"path": [
+										"empleados",
+										"pedidos",
+										"restaurante"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 02 Dec 2025 21:02:49 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1274"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Apigw-Requestid",
+									"value": "U-oPFhvzoAMEMiw="
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"pedidos\": [\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"correo\": \"juan.perez@outlook.com\",\n            \"created_at\": \"2025-12-02T20:27:42.924077\",\n            \"productos\": [\n                {\n                    \"producto_id\": \"LOCAL-001#Mega Marino 56\",\n                    \"cantidad\": 1\n                },\n                {\n                    \"producto_id\": \"LOCAL-001#Promociones 4\",\n                    \"cantidad\": 2\n                },\n                {\n                    \"producto_id\": \"LOCAL-001#Promociones 42\",\n                    \"cantidad\": 3\n                }\n            ],\n            \"estado\": \"recibido\",\n            \"costo\": 260.14,\n            \"direccion\": \"Calle 180 #390\",\n            \"pedido_id\": \"c6ad01f6-5316-4435-a831-6ad0d631d2c7\"\n        },\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"correo\": \"ana.fernandez@gmail.com\",\n            \"created_at\": \"2025-12-02T20:10:42.925847\",\n            \"productos\": [\n                {\n                    \"producto_id\": \"LOCAL-001#Promociones 6\",\n                    \"cantidad\": 2\n                }\n            ],\n            \"estado\": \"recibido\",\n            \"costo\": 88.58,\n            \"direccion\": \"Calle 3 #804\",\n            \"pedido_id\": \"c722e2cb-d058-48b0-94e5-fd0b9e1aab3f\"\n        },\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"correo\": \"diego.flores@outlook.com\",\n            \"created_at\": \"2025-12-02T19:36:42.925401\",\n            \"productos\": [\n                {\n                    \"producto_id\": \"LOCAL-001#Promociones 18\",\n                    \"cantidad\": 1\n                },\n                {\n                    \"producto_id\": \"LOCAL-001#Promociones 4\",\n                    \"cantidad\": 3\n                }\n            ],\n            \"estado\": \"recibido\",\n            \"costo\": 214.4,\n            \"direccion\": \"Calle 65 #936\",\n            \"pedido_id\": \"a5c54737-f3cb-4d7c-9601-e70c5f6aa927\"\n        }\n    ],\n    \"size\": 10,\n    \"next_token\": \"eyJsb2NhbF9pZCI6ICJMT0NBTC0wMDEiLCAicGVkaWRvX2lkIjogIjc0YmM1ZDg1LWY0YWQtNGI2YS1iZGJiLTAzMWQwZjk0ODk5MCJ9\",\n    \"local_id\": \"LOCAL-001\"\n}"
+						}
+					]
+				},
+				{
 					"name": "Cocina Inicia Preparación",
 					"request": {
 						"method": "POST",
@@ -1410,7 +1602,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": "",
+							"_postman_previewlanguage": null,
 							"header": [
 								{
 									"key": "Date",
@@ -1455,7 +1647,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"local_id\": \"{{local_id}}\"\n}"
+							"raw": "{\n  \"local_id\": \"{{local_id}}\",\n  \"nombre\": \"Marinas\"\n}"
 						},
 						"url": {
 							"raw": "{{products_url}}/productos/list",
@@ -1468,7 +1660,167 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Listar Productos",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"local_id\": \"{{local_id}}\",\n  \"nombre\": \"Marino\"\n}"
+								},
+								"url": {
+									"raw": "{{products_url}}/productos/list",
+									"host": [
+										"{{products_url}}"
+									],
+									"path": [
+										"productos",
+										"list"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 02 Dec 2025 20:41:09 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1240"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Apigw-Requestid",
+									"value": "U-lD8haOIAMEPKg="
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"contents\": [\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"nombre\": \"Trios Marinos 36\",\n            \"descripcion\": \"Delicioso plato de la categoría Trios Marinos\",\n            \"stock\": 17,\n            \"imagen_url\": \"https://productos-millas-images-bucket-209580367248.s3.amazonaws.com/productos/local-001/trios-marinos-36.jpg\",\n            \"categoria\": \"Trios Marinos\",\n            \"precio\": 50.23,\n            \"producto_id\": \"14cbc2bd-1216-4669-aa54-3f7372309dbb\"\n        },\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"nombre\": \"Box Marino 10\",\n            \"descripcion\": \"Delicioso plato de la categoría Box Marino\",\n            \"stock\": 8,\n            \"imagen_url\": \"https://productos-millas-images-bucket-209580367248.s3.amazonaws.com/productos/local-001/box-marino-10.jpg\",\n            \"categoria\": \"Box Marino\",\n            \"precio\": 75.83,\n            \"producto_id\": \"3141d97f-942a-441f-bf0c-2f8ac16278ba\"\n        },\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"nombre\": \"Mega Marino 19\",\n            \"descripcion\": \"Delicioso plato de la categoría Mega Marino\",\n            \"stock\": 10,\n            \"imagen_url\": \"https://productos-millas-images-bucket-209580367248.s3.amazonaws.com/productos/local-001/mega-marino-19.jpg\",\n            \"categoria\": \"Mega Marino\",\n            \"precio\": 40.82,\n            \"producto_id\": \"46626c7e-3d4d-4744-81aa-2ac5847971be\"\n        }\n    ],\n    \"size\": 10,\n    \"next_token\": \"eyJsb2NhbF9pZCI6ICJMT0NBTC0wMDEiLCAicHJvZHVjdG9faWQiOiAiNDY2MjZjN2UtM2Q0ZC00NzQ0LTgxYWEtMmFjNTg0Nzk3MWJlIn0=\",\n    \"page\": 0\n}"
+						},
+						{
+							"name": "Listar Productos",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"local_id\": \"{{local_id}}\",\n  \"nombre\": \"Fritazo\"\n}"
+								},
+								"url": {
+									"raw": "{{products_url}}/productos/list",
+									"host": [
+										"{{products_url}}"
+									],
+									"path": [
+										"productos",
+										"list"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 02 Dec 2025 21:55:19 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "846"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Apigw-Requestid",
+									"value": "U-v7QgghIAMEaYQ="
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"contents\": [\n        {\n            \"local_id\": \"LOCAL-003\",\n            \"nombre\": \"Fritazo 32\",\n            \"descripcion\": \"Delicioso plato de la categoría Fritazo\",\n            \"stock\": 25,\n            \"imagen_url\": \"https://productos-millas-images-bucket-209580367248.s3.amazonaws.com/productos/local-003/fritazo-32.jpg\",\n            \"categoria\": \"Fritazo\",\n            \"precio\": 53.35,\n            \"producto_id\": \"1cccb96f-3306-4706-a636-e73520507f32\"\n        },\n        {\n            \"local_id\": \"LOCAL-003\",\n            \"nombre\": \"Fritazo 16\",\n            \"descripcion\": \"Delicioso plato de la categoría Fritazo\",\n            \"stock\": 1,\n            \"imagen_url\": \"https://productos-millas-images-bucket-209580367248.s3.amazonaws.com/productos/local-003/fritazo-16.jpg\",\n            \"categoria\": \"Fritazo\",\n            \"precio\": 67.57,\n            \"producto_id\": \"1d1be953-3889-4575-8892-c13113033cbf\"\n        }\n    ],\n    \"size\": 10,\n    \"next_token\": \"eyJwcm9kdWN0b19pZCI6ICI0NzJiNTE4Ni1lYTI0LTQxNDMtOGE0Ny05MDg0OWM2ZjBkZWIiLCAibG9jYWxfaWQiOiAiTE9DQUwtMDAzIn0=\",\n    \"page\": 0\n}"
+						},
+						{
+							"name": "Listar Productos",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"local_id\": \"{{local_id}}\",\n  \"nombre\": \"Marinas\"\n}"
+								},
+								"url": {
+									"raw": "{{products_url}}/productos/list",
+									"host": [
+										"{{products_url}}"
+									],
+									"path": [
+										"productos",
+										"list"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 02 Dec 2025 22:09:06 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1537"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Apigw-Requestid",
+									"value": "U-x8Yj1cIAMEZew="
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"contents\": [\n        {\n            \"local_id\": \"LOCAL-003\",\n            \"nombre\": \"Rondas Marinas 58\",\n            \"descripcion\": \"Delicioso plato de la categoría Rondas Marinas\",\n            \"stock\": 30,\n            \"imagen_url\": \"https://productos-millas-images-bucket-209580367248.s3.amazonaws.com/productos/local-003/rondas-marinas-58.jpg\",\n            \"categoria\": \"Rondas Marinas\",\n            \"precio\": 62.71,\n            \"producto_id\": \"3e57b06b-0e55-4876-9637-5e039a995a07\"\n        },\n        {\n            \"local_id\": \"LOCAL-003\",\n            \"nombre\": \"Rondas Marinas 18\",\n            \"descripcion\": \"Delicioso plato de la categoría Rondas Marinas\",\n            \"stock\": 31,\n            \"imagen_url\": \"https://productos-millas-images-bucket-209580367248.s3.amazonaws.com/productos/local-003/rondas-marinas-18.jpg\",\n            \"categoria\": \"Rondas Marinas\",\n            \"precio\": 54.47,\n            \"producto_id\": \"6d38c6ae-c6c5-41ec-8f5e-0f1f285b034f\"\n        },\n        {\n            \"local_id\": \"LOCAL-003\",\n            \"nombre\": \"Rondas Marinas 26\",\n            \"descripcion\": \"Delicioso plato de la categoría Rondas Marinas\",\n            \"stock\": 23,\n            \"imagen_url\": \"https://productos-millas-images-bucket-209580367248.s3.amazonaws.com/productos/local-003/rondas-marinas-26.jpg\",\n            \"categoria\": \"Rondas Marinas\",\n            \"precio\": 31.21,\n            \"producto_id\": \"896f634d-55e3-482f-a9c3-25134f8a8a99\"\n        },\n        {\n            \"local_id\": \"LOCAL-003\",\n            \"nombre\": \"Rondas Marinas 50\",\n            \"descripcion\": \"Delicioso plato de la categoría Rondas Marinas\",\n            \"stock\": 28,\n            \"imagen_url\": \"https://productos-millas-images-bucket-209580367248.s3.amazonaws.com/productos/local-003/rondas-marinas-50.jpg\",\n            \"categoria\": \"Rondas Marinas\",\n            \"precio\": 50.06,\n            \"producto_id\": \"d99ae855-b6f5-412d-971e-186b4cd40a3e\"\n        }\n    ],\n    \"size\": 10,\n    \"next_token\": null,\n    \"page\": 0\n}"
+						}
+					]
 				},
 				{
 					"name": "Buscar Producto por ID",
@@ -1801,88 +2153,6 @@
 			"name": "📦 Pedidos (Cliente)",
 			"item": [
 				{
-					"name": "Cliente Confirma",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"order_id\": \"{{pedido_id}}\",\n    \"empleado_id\": \"{{dni_local1_cocinero}}\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{clientes_url}}/pedido/confirmar",
-							"host": [
-								"{{clientes_url}}"
-							],
-							"path": [
-								"pedido",
-								"confirmar"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "Cliente Confirma",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"order_id\": \"{{pedido_id}}\",\n    \"empleado_id\": \"{{dni_local1_cocinero}}\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{empleado_url}}/empleados/cliente/confirmar",
-									"host": [
-										"{{empleado_url}}"
-									],
-									"path": [
-										"empleados",
-										"cliente",
-										"confirmar"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": null,
-							"header": [
-								{
-									"key": "Date",
-									"value": "Fri, 28 Nov 2025 15:43:32 GMT"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Content-Length",
-									"value": "105"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Apigw-Requestid",
-									"value": "UwtttgbuIAMEVUA="
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"message\": \"ConfirmarPedidoCliente event published\",\n    \"order_id\": \"e6d2beeb-19c2-4751-861c-de9003f79f7a\"\n}"
-						}
-					]
-				},
-				{
 					"name": "Crear Pedido",
 					"event": [
 						{
@@ -1990,6 +2260,88 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"message\": \"Pedido registrado\",\n    \"pedido\": {\n        \"local_id\": \"LOCAL-001\",\n        \"pedido_id\": \"e4ea48e8-9a4c-48be-b5a0-281093271604\",\n        \"tenant_id_usuario\": \"millas#juan.cliente@200millas.com\",\n        \"productos\": [\n            {\n                \"producto_id\": \"2be9e880-9a55-4ff4-88c9-ab272fc047af\",\n                \"cantidad\": 2\n            }\n        ],\n        \"costo\": \"125.5\",\n        \"direccion\": \"Av. Principal 123, Lima, Perú\",\n        \"estado\": \"procesando\",\n        \"created_at\": \"2025-11-25T21:58:40.882492+00:00\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Cliente Confirma",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": \"{{pedido_id}}\",\n    \"empleado_id\": \"{{dni_local1_cocinero}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{clientes_url}}/pedido/confirmar",
+							"host": [
+								"{{clientes_url}}"
+							],
+							"path": [
+								"pedido",
+								"confirmar"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Cliente Confirma",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"order_id\": \"{{pedido_id}}\",\n    \"empleado_id\": \"{{dni_local1_cocinero}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{empleado_url}}/empleados/cliente/confirmar",
+									"host": [
+										"{{empleado_url}}"
+									],
+									"path": [
+										"empleados",
+										"cliente",
+										"confirmar"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Date",
+									"value": "Fri, 28 Nov 2025 15:43:32 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "105"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Apigw-Requestid",
+									"value": "UwtttgbuIAMEVUA="
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"ConfirmarPedidoCliente event published\",\n    \"order_id\": \"e6d2beeb-19c2-4751-861c-de9003f79f7a\"\n}"
 						}
 					]
 				},
@@ -2120,7 +2472,7 @@
 							},
 							"status": "OK",
 							"code": 200,
-							"_postman_previewlanguage": "",
+							"_postman_previewlanguage": null,
 							"header": [
 								{
 									"key": "Date",
@@ -2145,6 +2497,81 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"local_id\": \"LOCAL-001\",\n    \"pedido_id\": \"74b26044-9f4d-40ee-b7a7-0ed1d13043ef\",\n    \"estado\": \"pedido_en_camino\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Historial Pedidos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token_user}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{clientes_url}}/pedido/historial",
+							"host": [
+								"{{clientes_url}}"
+							],
+							"path": [
+								"pedido",
+								"historial"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Historial Pedidos",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token_user}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{clientes_url}}/pedido/historial",
+									"host": [
+										"{{clientes_url}}"
+									],
+									"path": [
+										"pedido",
+										"historial"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 02 Dec 2025 21:46:57 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "391"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Apigw-Requestid",
+									"value": "U-ussjenoAMEcRQ="
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"pedidos\": [\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"correo\": \"juan.cliente@200millas.com\",\n            \"created_at\": \"2025-12-02T21:46:52.575748+00:00\",\n            \"productos\": [\n                {\n                    \"producto_id\": \"e431f207-3fa1-4ffe-8b2f-b59c20b8e562\",\n                    \"cantidad\": 2\n                }\n            ],\n            \"pedido_id\": \"b175f658-80fb-4b20-a7a2-b813f0fbc3aa\",\n            \"estado\": \"procesando\",\n            \"costo\": 125.5,\n            \"direccion\": \"Av. Principal 123, Lima, Perú\"\n        }\n    ],\n    \"size\": 10,\n    \"next_token\": null\n}"
 						}
 					]
 				}
@@ -2248,7 +2675,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"local_id\" : \"LOCAL-007\"\n}",
+							"raw": "{\n    \"local_id\" : \"LOCAL-001\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2268,7 +2695,7 @@
 					},
 					"response": [
 						{
-							"name": "New Request",
+							"name": "Pedidos por Local",
 							"originalRequest": {
 								"method": "POST",
 								"header": [],
@@ -2282,14 +2709,9 @@
 									}
 								},
 								"url": {
-									"raw": "https://9chtp1assj.execute-api.us-east-1.amazonaws.com/analytics/pedidos-por-local",
-									"protocol": "https",
+									"raw": "{{analytic_url}}/analytics/pedidos-por-local",
 									"host": [
-										"9chtp1assj",
-										"execute-api",
-										"us-east-1",
-										"amazonaws",
-										"com"
+										"{{analytic_url}}"
 									],
 									"path": [
 										"analytics",
@@ -2303,7 +2725,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Wed, 26 Nov 2025 01:08:14 GMT"
+									"value": "Sun, 30 Nov 2025 23:50:04 GMT"
 								},
 								{
 									"key": "Content-Type",
@@ -2313,7 +2735,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "121"
+									"value": "122"
 								},
 								{
 									"key": "Connection",
@@ -2329,11 +2751,11 @@
 								},
 								{
 									"key": "access-control-allow-methods",
-									"value": "POST,OPTIONS"
+									"value": "POST,OPTIONS,GET"
 								},
 								{
 									"key": "Apigw-Requestid",
-									"value": "UoHnQiwXIAMEb2w="
+									"value": "U4a2ghqxIAMEM8A="
 								}
 							],
 							"cookie": [
@@ -2343,85 +2765,7 @@
 									"path": ""
 								}
 							],
-							"body": "{\n    \"query\": \"Total de pedidos por local\",\n    \"local_id\": \"LOCAL-001\",\n    \"data\": [\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"total_pedidos\": 5\n        }\n    ]\n}"
-						},
-						{
-							"name": "New Request",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"local_id\" : \"LOCAL-002\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://9chtp1assj.execute-api.us-east-1.amazonaws.com/analytics/pedidos-por-local",
-									"protocol": "https",
-									"host": [
-										"9chtp1assj",
-										"execute-api",
-										"us-east-1",
-										"amazonaws",
-										"com"
-									],
-									"path": [
-										"analytics",
-										"pedidos-por-local"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Wed, 26 Nov 2025 01:08:39 GMT"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json",
-									"description": "",
-									"type": "text"
-								},
-								{
-									"key": "Content-Length",
-									"value": "121"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "access-control-allow-methods",
-									"value": "POST,OPTIONS"
-								},
-								{
-									"key": "access-control-allow-origin",
-									"value": "*"
-								},
-								{
-									"key": "access-control-allow-headers",
-									"value": "Content-Type,Authorization"
-								},
-								{
-									"key": "Apigw-Requestid",
-									"value": "UoHrUiKAoAMEVYw="
-								}
-							],
-							"cookie": [
-								{
-									"expires": "Invalid Date",
-									"domain": "",
-									"path": ""
-								}
-							],
-							"body": "{\n    \"query\": \"Total de pedidos por local\",\n    \"local_id\": \"LOCAL-002\",\n    \"data\": [\n        {\n            \"local_id\": \"LOCAL-002\",\n            \"total_pedidos\": 5\n        }\n    ]\n}"
+							"body": "{\n    \"query\": \"Total de pedidos por local\",\n    \"local_id\": \"LOCAL-001\",\n    \"data\": [\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"total_pedidos\": 14\n        }\n    ]\n}"
 						}
 					]
 				},
@@ -2452,85 +2796,7 @@
 					},
 					"response": [
 						{
-							"name": "New Request",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"local_id\" : \"LOCAL-007\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://9chtp1assj.execute-api.us-east-1.amazonaws.com/analytics/ganancias-por-local",
-									"protocol": "https",
-									"host": [
-										"9chtp1assj",
-										"execute-api",
-										"us-east-1",
-										"amazonaws",
-										"com"
-									],
-									"path": [
-										"analytics",
-										"ganancias-por-local"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Wed, 26 Nov 2025 01:09:05 GMT"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json",
-									"description": "",
-									"type": "text"
-								},
-								{
-									"key": "Content-Length",
-									"value": "193"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "access-control-allow-origin",
-									"value": "*"
-								},
-								{
-									"key": "access-control-allow-headers",
-									"value": "Content-Type,Authorization"
-								},
-								{
-									"key": "access-control-allow-methods",
-									"value": "POST,OPTIONS"
-								},
-								{
-									"key": "Apigw-Requestid",
-									"value": "UoHvSgqAoAMEbog="
-								}
-							],
-							"cookie": [
-								{
-									"expires": "Invalid Date",
-									"domain": "",
-									"path": ""
-								}
-							],
-							"body": "{\n    \"query\": \"Ganancias totales por local\",\n    \"local_id\": \"LOCAL-007\",\n    \"data\": [\n        {\n            \"local_id\": \"LOCAL-007\",\n            \"total_pedidos\": 11,\n            \"ganancias_totales\": 3163.1,\n            \"ganancia_promedio\": 287.55454545454546\n        }\n    ]\n}"
-						},
-						{
-							"name": "New Request",
+							"name": "Ganancias por Locals",
 							"originalRequest": {
 								"method": "POST",
 								"header": [],
@@ -2544,14 +2810,9 @@
 									}
 								},
 								"url": {
-									"raw": "https://9chtp1assj.execute-api.us-east-1.amazonaws.com/analytics/ganancias-por-local",
-									"protocol": "https",
+									"raw": "{{analytic_url}}/analytics/ganancias-por-local",
 									"host": [
-										"9chtp1assj",
-										"execute-api",
-										"us-east-1",
-										"amazonaws",
-										"com"
+										"{{analytic_url}}"
 									],
 									"path": [
 										"analytics",
@@ -2565,7 +2826,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Wed, 26 Nov 2025 01:09:37 GMT"
+									"value": "Sun, 30 Nov 2025 23:50:37 GMT"
 								},
 								{
 									"key": "Content-Type",
@@ -2575,7 +2836,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "182"
+									"value": "194"
 								},
 								{
 									"key": "Connection",
@@ -2591,11 +2852,11 @@
 								},
 								{
 									"key": "access-control-allow-methods",
-									"value": "POST,OPTIONS"
+									"value": "POST,OPTIONS,GET"
 								},
 								{
 									"key": "Apigw-Requestid",
-									"value": "UoH0YgduIAMEVyA="
+									"value": "U4a7ti3qoAMEYXw="
 								}
 							],
 							"cookie": [
@@ -2605,7 +2866,7 @@
 									"path": ""
 								}
 							],
-							"body": "{\n    \"query\": \"Ganancias totales por local\",\n    \"local_id\": \"LOCAL-002\",\n    \"data\": [\n        {\n            \"local_id\": \"LOCAL-002\",\n            \"total_pedidos\": 5,\n            \"ganancias_totales\": 1299.96,\n            \"ganancia_promedio\": 259.992\n        }\n    ]\n}"
+							"body": "{\n    \"query\": \"Ganancias totales por local\",\n    \"local_id\": \"LOCAL-002\",\n    \"data\": [\n        {\n            \"local_id\": \"LOCAL-002\",\n            \"total_pedidos\": 10,\n            \"ganancias_totales\": 2085.0299999999997,\n            \"ganancia_promedio\": 208.503\n        }\n    ]\n}"
 						}
 					]
 				},
@@ -2616,7 +2877,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"local_id\" : \"LOCAL-007\"\n}",
+							"raw": "{\n    \"local_id\" : \"LOCAL-001\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2642,7 +2903,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"local_id\" : \"LOCAL-007\"\n}",
+									"raw": "{\n    \"local_id\" : \"LOCAL-001\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2666,18 +2927,17 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sat, 29 Nov 2025 06:54:20 GMT"
+									"value": "Sun, 30 Nov 2025 23:51:00 GMT"
 								},
 								{
 									"key": "Content-Type",
 									"value": "application/json",
-									"name": "Content-Type",
 									"description": "",
 									"type": "text"
 								},
 								{
 									"key": "Content-Length",
-									"value": "908"
+									"value": "646"
 								},
 								{
 									"key": "Connection",
@@ -2693,11 +2953,11 @@
 								},
 								{
 									"key": "access-control-allow-methods",
-									"value": "POST,OPTIONS"
+									"value": "POST,OPTIONS,GET"
 								},
 								{
 									"key": "Apigw-Requestid",
-									"value": "UyzIFgsYIAMEPxw="
+									"value": "U4a_RhykIAMEYbw="
 								}
 							],
 							"cookie": [
@@ -2707,7 +2967,7 @@
 									"path": ""
 								}
 							],
-							"body": "{\n    \"query\": \"Tiempo total de pedido (procesado -> recibido) por local\",\n    \"local_id\": \"todos\",\n    \"pagination\": {\n        \"page\": 1,\n        \"page_size\": 10,\n        \"total_items\": 5,\n        \"total_pages\": 1,\n        \"has_next\": false,\n        \"has_prev\": false\n    },\n    \"data\": [\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"total_pedidos\": 2,\n            \"tiempo_promedio_minutos\": 47.5,\n            \"tiempo_minimo_minutos\": 40,\n            \"tiempo_maximo_minutos\": 55\n        },\n        {\n            \"local_id\": \"LOCAL-005\",\n            \"total_pedidos\": 1,\n            \"tiempo_promedio_minutos\": 47,\n            \"tiempo_minimo_minutos\": 47,\n            \"tiempo_maximo_minutos\": 47\n        },\n        {\n            \"local_id\": \"LOCAL-004\",\n            \"total_pedidos\": 2,\n            \"tiempo_promedio_minutos\": 46.5,\n            \"tiempo_minimo_minutos\": 46,\n            \"tiempo_maximo_minutos\": 47\n        },\n        {\n            \"local_id\": \"LOCAL-007\",\n            \"total_pedidos\": 2,\n            \"tiempo_promedio_minutos\": 41,\n            \"tiempo_minimo_minutos\": 38,\n            \"tiempo_maximo_minutos\": 44\n        },\n        {\n            \"local_id\": \"LOCAL-006\",\n            \"total_pedidos\": 1,\n            \"tiempo_promedio_minutos\": 35,\n            \"tiempo_minimo_minutos\": 35,\n            \"tiempo_maximo_minutos\": 35\n        }\n    ]\n}"
+							"body": "{\n    \"query\": \"Tiempo total de pedido (procesado -> recibido) por local\",\n    \"local_id\": \"todos\",\n    \"pagination\": {\n        \"page\": 1,\n        \"page_size\": 10,\n        \"total_items\": 3,\n        \"total_pages\": 1,\n        \"has_next\": false,\n        \"has_prev\": false\n    },\n    \"data\": [\n        {\n            \"local_id\": \"LOCAL-002\",\n            \"total_pedidos\": 2,\n            \"tiempo_promedio_minutos\": 47.5,\n            \"tiempo_minimo_minutos\": 43,\n            \"tiempo_maximo_minutos\": 52\n        },\n        {\n            \"local_id\": \"LOCAL-001\",\n            \"total_pedidos\": 1,\n            \"tiempo_promedio_minutos\": 45,\n            \"tiempo_minimo_minutos\": 45,\n            \"tiempo_maximo_minutos\": 45\n        },\n        {\n            \"local_id\": \"LOCAL-003\",\n            \"total_pedidos\": 3,\n            \"tiempo_promedio_minutos\": 38.666666666666664,\n            \"tiempo_minimo_minutos\": 37,\n            \"tiempo_maximo_minutos\": 41\n        }\n    ]\n}"
 						}
 					]
 				},
@@ -2738,13 +2998,13 @@
 					},
 					"response": [
 						{
-							"name": "New Request",
+							"name": "Tiempo promedio de Pedidos",
 							"originalRequest": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"local_id\" : \"LOCAL-007\"\n}",
+									"raw": "{\n    \"local_id\" : \"LOCAL-001\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2752,14 +3012,9 @@
 									}
 								},
 								"url": {
-									"raw": "https://9chtp1assj.execute-api.us-east-1.amazonaws.com/analytics/promedio-por-estado",
-									"protocol": "https",
+									"raw": "{{analytic_url}}/analytics/promedio-por-estado",
 									"host": [
-										"9chtp1assj",
-										"execute-api",
-										"us-east-1",
-										"amazonaws",
-										"com"
+										"{{analytic_url}}"
 									],
 									"path": [
 										"analytics",
@@ -2773,7 +3028,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Wed, 26 Nov 2025 01:12:12 GMT"
+									"value": "Sun, 30 Nov 2025 23:51:42 GMT"
 								},
 								{
 									"key": "Content-Type",
@@ -2783,7 +3038,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "988"
+									"value": "973"
 								},
 								{
 									"key": "Connection",
@@ -2795,7 +3050,7 @@
 								},
 								{
 									"key": "access-control-allow-methods",
-									"value": "POST,OPTIONS"
+									"value": "POST,OPTIONS,GET"
 								},
 								{
 									"key": "access-control-allow-origin",
@@ -2803,7 +3058,7 @@
 								},
 								{
 									"key": "Apigw-Requestid",
-									"value": "UoIMmilDoAMEabQ="
+									"value": "U4bF2g9QIAMEYKQ="
 								}
 							],
 							"cookie": [
@@ -2813,7 +3068,7 @@
 									"path": ""
 								}
 							],
-							"body": "{\n    \"query\": \"Promedio de tiempo por estado\",\n    \"local_id\": \"LOCAL-007\",\n    \"data\": [\n        {\n            \"estado\": \"recibido\",\n            \"total_pedidos\": 5,\n            \"tiempo_promedio_minutos\": 13,\n            \"tiempo_minimo_minutos\": 8,\n            \"tiempo_maximo_minutos\": 15,\n            \"desviacion_estandar\": 2.91547594742265\n        },\n        {\n            \"estado\": \"empacando\",\n            \"total_pedidos\": 7,\n            \"tiempo_promedio_minutos\": 10.142857142857142,\n            \"tiempo_minimo_minutos\": 4,\n            \"tiempo_maximo_minutos\": 15,\n            \"desviacion_estandar\": 3.933978962347216\n        },\n        {\n            \"estado\": \"cocinando\",\n            \"total_pedidos\": 8,\n            \"tiempo_promedio_minutos\": 9.125,\n            \"tiempo_minimo_minutos\": 2,\n            \"tiempo_maximo_minutos\": 13,\n            \"desviacion_estandar\": 4.421942042651783\n        },\n        {\n            \"estado\": \"enviando\",\n            \"total_pedidos\": 7,\n            \"tiempo_promedio_minutos\": 9,\n            \"tiempo_minimo_minutos\": 2,\n            \"tiempo_maximo_minutos\": 14,\n            \"desviacion_estandar\": 4.760952285695233\n        },\n        {\n            \"estado\": \"procesando\",\n            \"total_pedidos\": 11,\n            \"tiempo_promedio_minutos\": 8.545454545454545,\n            \"tiempo_minimo_minutos\": 2,\n            \"tiempo_maximo_minutos\": 15,\n            \"desviacion_estandar\": 5.007267445696033\n        }\n    ]\n}"
+							"body": "{\n    \"query\": \"Promedio de tiempo por estado\",\n    \"local_id\": \"LOCAL-001\",\n    \"data\": [\n        {\n            \"estado\": \"enviando\",\n            \"total_pedidos\": 5,\n            \"tiempo_promedio_minutos\": 10,\n            \"tiempo_minimo_minutos\": 3,\n            \"tiempo_maximo_minutos\": 15,\n            \"desviacion_estandar\": 4.69041575982343\n        },\n        {\n            \"estado\": \"cocinando\",\n            \"total_pedidos\": 11,\n            \"tiempo_promedio_minutos\": 9.454545454545455,\n            \"tiempo_minimo_minutos\": 5,\n            \"tiempo_maximo_minutos\": 15,\n            \"desviacion_estandar\": 3.984059145234578\n        },\n        {\n            \"estado\": \"procesando\",\n            \"total_pedidos\": 14,\n            \"tiempo_promedio_minutos\": 8.571428571428571,\n            \"tiempo_minimo_minutos\": 2,\n            \"tiempo_maximo_minutos\": 15,\n            \"desviacion_estandar\": 5.154748157905347\n        },\n        {\n            \"estado\": \"empacando\",\n            \"total_pedidos\": 8,\n            \"tiempo_promedio_minutos\": 8.125,\n            \"tiempo_minimo_minutos\": 2,\n            \"tiempo_maximo_minutos\": 15,\n            \"desviacion_estandar\": 4.67325215607779\n        },\n        {\n            \"estado\": \"recibido\",\n            \"total_pedidos\": 1,\n            \"tiempo_promedio_minutos\": 4,\n            \"tiempo_minimo_minutos\": 4,\n            \"tiempo_maximo_minutos\": 4,\n            \"desviacion_estandar\": null\n        }\n    ]\n}"
 						}
 					]
 				}
@@ -2895,6 +3150,10 @@
 		},
 		{
 			"key": "dni_local1_repartidor",
+			"value": ""
+		},
+		{
+			"key": "token",
 			"value": ""
 		}
 	]
