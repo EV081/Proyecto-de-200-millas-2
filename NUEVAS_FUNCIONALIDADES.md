@@ -105,12 +105,13 @@ Authorization: Bearer <token_del_cliente>
 
 **Endpoint:** `POST /empleados/pedidos/restaurante`
 
-**Descripción:** Permite a los empleados ver todos los pedidos de un restaurante con filtros por categoría y nombre de producto.
+**Descripción:** Permite a los empleados ver todos los pedidos de un restaurante con filtros por estado, categoría y nombre de producto.
 
 **Body de ejemplo:**
 ```json
 {
   "local_id": "local-123",
+  "estado": "en_preparacion",
   "categoria": "bebidas",
   "nombre": "combo",
   "size": 15,
@@ -120,6 +121,7 @@ Authorization: Bearer <token_del_cliente>
 
 **Parámetros:**
 - `local_id` (requerido): ID del restaurante
+- `estado` (opcional): Filtrar por estado del pedido (ej: "procesando", "en_preparacion", "entregado")
 - `categoria` (opcional): Filtrar pedidos que contengan productos de esta categoría
 - `nombre` (opcional): Filtrar pedidos que contengan productos con este nombre (búsqueda parcial)
 - `size` (opcional): Cantidad de pedidos por página (default: 10, max: 100)
@@ -155,9 +157,33 @@ Authorization: Bearer <token_del_cliente>
 
 **Notas:**
 - Los pedidos se ordenan del más reciente al más antiguo
+- El filtro `estado` filtra pedidos completos por su estado
+- Los filtros `categoria` y `nombre` filtran los productos dentro de cada pedido
 - Si se especifican filtros de categoría o nombre, solo se muestran los pedidos que contengan productos que coincidan
 - Los productos dentro de cada pedido se filtran según los criterios especificados
-- Útil para que la cocina vea solo pedidos con ciertos tipos de productos
+- Útil para que la cocina vea solo pedidos en cierto estado o con ciertos tipos de productos
+
+**Ejemplos de uso:**
+```json
+// Ver solo pedidos en preparación
+{
+  "local_id": "local-123",
+  "estado": "en_preparacion"
+}
+
+// Ver pedidos listos para delivery que contengan bebidas
+{
+  "local_id": "local-123",
+  "estado": "listo_para_delivery",
+  "categoria": "bebidas"
+}
+
+// Ver todos los pedidos que contengan "ceviche"
+{
+  "local_id": "local-123",
+  "nombre": "ceviche"
+}
+```
 
 ---
 

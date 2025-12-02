@@ -109,12 +109,12 @@ def lambda_handler(event, context):
     next_token_in = body.get("next_token")
     lek = _decode_token(next_token_in)
 
-    # Query usando GSI by_usuario_v2 (correo como PK)
+    # Query usando GSI by_usuario_v2 (correo como PK, created_at como SK)
     qargs = {
         "IndexName": "by_usuario_v2",
         "KeyConditionExpression": Key("correo").eq(correo_token),
         "Limit": size,
-        "ScanIndexForward": False  # Ordenar por más reciente primero
+        "ScanIndexForward": False  # Ordenar por created_at descendente (más reciente primero)
     }
 
     if lek:
