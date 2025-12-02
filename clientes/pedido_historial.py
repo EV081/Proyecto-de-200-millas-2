@@ -4,7 +4,7 @@ import math
 import base64
 import boto3
 from decimal import Decimal
-from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
 from auth_helper import get_bearer_token, validate_token_via_lambda
 
@@ -111,7 +111,7 @@ def lambda_handler(event, context):
 
     # Scan con filtro por correo (ya que el GSI by_usuario_v2 no existe en la tabla actual)
     scan_args = {
-        "FilterExpression": Key("correo").eq(correo_token),
+        "FilterExpression": Attr("correo").eq(correo_token),
         "Limit": size
     }
 
