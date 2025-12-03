@@ -103,37 +103,36 @@ def lambda_handler(event, context):
     nombre = body.get("nombre")
     estado = body.get("estado")  # Filtro por estado
     
-    # Paginación
+    # Paginación - si hay filtros, ignorar size y traer TODOS
     size = _safe_int(body.get("size", body.get("limit", 10)), 10)
-    if size <= 0 or size > 100:
+    if size <= 0 or size > 1000:
         size = 10
+    
+    # Si hay filtros activos, traer TODOS los items que coincidan
+    traer_todos = bool(estado or categoria or nombre)
 
-    # Paginación por token
+    # Paginación por token (solo si NO hay filtros)
     next_token_in = body.get("next_token")
-    lek = _decode_token(next_token_in)
+    lek = _decode_token(next_token_in) if not traer_todos else None
 
     ddb = boto3.resource("dynamodb")
     table = ddb.Table(TABLE_PEDIDOS)
 
-    # Si hay filtros, necesitamos obtener más items y filtrar en memoria
-    # porque DynamoDB aplica Limit antes del FilterExpression
+    # Si hay filtros, obtener TODOS los items y filtrar en memoria
     filtered_items = []
     query_lek = lek
-    max_queries = 10  # Límite de seguridad
     queries_done = 0
     
     try:
-        # Continuar consultando hasta obtener suficientes items filtrados
-        while len(filtered_items) < size and queries_done < max_queries:
+        # Continuar consultando hasta obtener TODOS los items (si hay filtros) o hasta size (sin filtros)
+        while True:
             qargs = {
                 "KeyConditionExpression": Key("local_id").eq(local_id),
                 "ScanIndexForward": False  # Más recientes primero
             }
             
-            # Obtener más items si hay filtros activos para compensar el filtrado
-            if estado or categoria or nombre:
-                qargs["Limit"] = size * 3  # Obtener 3x más items para compensar filtros
-            else:
+            # Si NO hay filtros, usar paginación normal
+            if not traer_todos:
                 qargs["Limit"] = size
             
             if query_lek:
@@ -160,34 +159,31 @@ def lambda_handler(event, context):
                         item_copy = item.copy()
                         item_copy["productos"] = productos_filtrados
                         filtered_items.append(item_copy)
-                        if len(filtered_items) >= size:
-                            break
                 else:
                     # Sin filtros de producto, incluir el pedido completo
                     filtered_items.append(item)
-                    if len(filtered_items) >= size:
-                        break
+                
+                # Si NO hay filtros y ya tenemos suficientes, parar
+                if not traer_todos and len(filtered_items) >= size:
+                    break
             
             # Si no hay más items en DynamoDB, parar
             if not query_lek:
                 break
             
-            # Si ya tenemos suficientes items, parar
-            if len(filtered_items) >= size:
+            # Si NO hay filtros y ya tenemos suficientes items, parar
+            if not traer_todos and len(filtered_items) >= size:
                 break
         
-        print(f"Query completado: {len(filtered_items)} pedidos encontrados después de {queries_done} query(s)")
+        print(f"Query completado: {len(filtered_items)} pedidos encontrados después de {queries_done} query(s). Filtros activos: {traer_todos}")
         
     except ClientError as e:
         print(f"Error query pedidos: {e}")
         return _resp(500, {"error": "Error consultando pedidos del restaurante"})
     
-    # Limitar a size items
-    if len(filtered_items) > size:
-        filtered_items = filtered_items[:size]
-    
     items = filtered_items
-    lek_out = query_lek
+    # Si hay filtros, no hay next_token (se trajeron todos)
+    lek_out = None if traer_todos else query_lek
 
     # Ordenar por fecha (created_at) descendente
     items.sort(key=lambda x: x.get("created_at", ""), reverse=True)
