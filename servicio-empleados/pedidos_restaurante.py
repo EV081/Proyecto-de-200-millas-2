@@ -101,7 +101,7 @@ def lambda_handler(event, context):
     # Filtros opcionales
     categoria = body.get("categoria")
     nombre = body.get("nombre")
-    estado = body.get("estado")  # Nuevo filtro por estado
+    estado = body.get("estado")  # Filtro por estado
     
     # Paginación
     size = _safe_int(body.get("size", body.get("limit", 10)), 10)
@@ -115,47 +115,79 @@ def lambda_handler(event, context):
     ddb = boto3.resource("dynamodb")
     table = ddb.Table(TABLE_PEDIDOS)
 
-    # Query por local_id (PK)
-    qargs = {
-        "KeyConditionExpression": Key("local_id").eq(local_id),
-        "Limit": size,
-        "ScanIndexForward": False  # Más recientes primero
-    }
-
-    if lek:
-        qargs["ExclusiveStartKey"] = lek
-
+    # Si hay filtros, necesitamos obtener más items y filtrar en memoria
+    # porque DynamoDB aplica Limit antes del FilterExpression
+    filtered_items = []
+    query_lek = lek
+    max_queries = 10  # Límite de seguridad
+    queries_done = 0
+    
     try:
-        response = table.query(**qargs)
+        # Continuar consultando hasta obtener suficientes items filtrados
+        while len(filtered_items) < size and queries_done < max_queries:
+            qargs = {
+                "KeyConditionExpression": Key("local_id").eq(local_id),
+                "ScanIndexForward": False  # Más recientes primero
+            }
+            
+            # Obtener más items si hay filtros activos para compensar el filtrado
+            if estado or categoria or nombre:
+                qargs["Limit"] = size * 3  # Obtener 3x más items para compensar filtros
+            else:
+                qargs["Limit"] = size
+            
+            if query_lek:
+                qargs["ExclusiveStartKey"] = query_lek
+            
+            response = table.query(**qargs)
+            page_items = response.get("Items", [])
+            query_lek = response.get("LastEvaluatedKey")
+            queries_done += 1
+            
+            # Aplicar filtros a los items de esta página
+            for item in page_items:
+                # Filtrar por estado si se especificó
+                if estado and not _matches_estado(item.get("estado"), estado):
+                    continue
+                
+                # Filtrar productos dentro del pedido si se especificaron filtros de producto
+                if categoria or nombre:
+                    productos = item.get("productos", [])
+                    productos_filtrados = _filter_productos(productos, categoria, nombre)
+                    
+                    # Solo incluir el pedido si tiene productos que coinciden con los filtros
+                    if productos_filtrados:
+                        item_copy = item.copy()
+                        item_copy["productos"] = productos_filtrados
+                        filtered_items.append(item_copy)
+                        if len(filtered_items) >= size:
+                            break
+                else:
+                    # Sin filtros de producto, incluir el pedido completo
+                    filtered_items.append(item)
+                    if len(filtered_items) >= size:
+                        break
+            
+            # Si no hay más items en DynamoDB, parar
+            if not query_lek:
+                break
+            
+            # Si ya tenemos suficientes items, parar
+            if len(filtered_items) >= size:
+                break
+        
+        print(f"Query completado: {len(filtered_items)} pedidos encontrados después de {queries_done} query(s)")
+        
     except ClientError as e:
         print(f"Error query pedidos: {e}")
         return _resp(500, {"error": "Error consultando pedidos del restaurante"})
-
-    items = response.get("Items", [])
-    lek_out = response.get("LastEvaluatedKey")
-
-    # Aplicar filtros
-    filtered_items = []
-    for item in items:
-        # Filtrar por estado si se especificó
-        if estado and not _matches_estado(item.get("estado"), estado):
-            continue
-        
-        # Filtrar productos dentro del pedido si se especificaron filtros de producto
-        if categoria or nombre:
-            productos = item.get("productos", [])
-            productos_filtrados = _filter_productos(productos, categoria, nombre)
-            
-            # Solo incluir el pedido si tiene productos que coinciden con los filtros
-            if productos_filtrados:
-                item_copy = item.copy()
-                item_copy["productos"] = productos_filtrados
-                filtered_items.append(item_copy)
-        else:
-            # Sin filtros de producto, incluir el pedido completo
-            filtered_items.append(item)
+    
+    # Limitar a size items
+    if len(filtered_items) > size:
+        filtered_items = filtered_items[:size]
     
     items = filtered_items
+    lek_out = query_lek
 
     # Ordenar por fecha (created_at) descendente
     items.sort(key=lambda x: x.get("created_at", ""), reverse=True)
