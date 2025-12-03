@@ -216,3 +216,64 @@ if (data.next_token) {
   });
 }
 ```
+
+
+---
+
+## 4. Validación de Empleados en Triggers
+
+**Archivos:** Todos los triggers en `servicio-empleados/`
+
+**Descripción:** Todos los endpoints de empleados ahora validan que el DNI del empleado existe en la tabla de empleados antes de procesar la acción.
+
+**Endpoints afectados:**
+- `POST /empleados/cocina/iniciar` (trigger_en_preparacion)
+- `POST /empleados/cocina/completar` (trigger_cocina_completa)
+- `POST /empleados/empaque/completar` (trigger_empaquetado)
+- `POST /empleados/delivery/iniciar` (trigger_pedido_en_camino)
+- `POST /empleados/delivery/entregar` (trigger_entrega_delivery)
+
+**Cambios en el body:**
+- Antes: `{"order_id": "...", "empleado_id": "..."}`
+- Ahora: `{"order_id": "...", "local_id": "...", "dni": "..."}`
+
+**Ejemplo de uso:**
+```json
+POST /empleados/cocina/iniciar
+Body: {
+  "order_id": "abc-123-def",
+  "local_id": "LOCAL-001",
+  "dni": "12345678"
+}
+```
+
+**Respuestas:**
+
+Éxito (200):
+```json
+{
+  "message": "EnPreparacion event published",
+  "order_id": "abc-123-def",
+  "empleado": "Juan Pérez"
+}
+```
+
+Error - Empleado no encontrado (403):
+```json
+{
+  "error": "Empleado no autorizado: Empleado con DNI 12345678 no encontrado en local LOCAL-001"
+}
+```
+
+Error - Empleado inactivo (403):
+```json
+{
+  "error": "Empleado no autorizado: Empleado con DNI 12345678 está inactivo"
+}
+```
+
+**Validaciones:**
+- ✅ Verifica que el empleado existe en TABLE_EMPLEADOS
+- ✅ Verifica que el empleado pertenece al local correcto (local_id + dni)
+- ✅ Verifica que el empleado está activo (si el campo existe)
+- ✅ Incluye el nombre del empleado en la respuesta y en el evento

@@ -11,6 +11,7 @@ provider:
   environment:
     EVENT_BUS_NAME: default
     TABLE_PEDIDOS: ${env:TABLE_PEDIDOS}
+    TABLE_EMPLEADOS: ${env:TABLE_EMPLEADOS}
   httpApi:
     cors: true
 
